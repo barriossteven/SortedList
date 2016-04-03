@@ -1,0 +1,56 @@
+Steven Barrios
+testplan.txt
+pa2
+
+Given my implementation of a sorted-list, we need to create a compare function and a destruct functionthat we can give to the api. The compare function must takes two void pointers and return an int and the destruct function takes a void pointer and returns nothing.
+
+Now in main, we must declare and initialize a sorted list type. Using SLCreate and passing it the address of the compare and destruct functions we created earlier, we allocate memory the size of a 'struct SortedList' and use memset to initialize everything to 0 and return a SortedListPtr.
+
+Using a while loop we enter a reasonable amount of numbers to populate our list and store the int that SLInsert returns into "status". We print out a status depending on the value of "status". The scanner will stop reading values when the value read is not an int.
+
+Values entered: 	Expected Output:
+45			insert success
+76			insert success
+3			insert success
+2			insert success
+4			insert success
+5			insert success
+9			insert success
+6			insert success
+4			duplicate
+10			insert success
+600			insert success
+
+Our sorted-list looks like this: 600 76 45 10 9 6 5 4 3 2
+
+Now we will create a SortedListIterator using SLCreateIterator and pass it our list.
+
+Currently every node in the list has one pointCount but when the iterator is created and initialized to the head, the pointCount of head increases by 1.
+
+				iter i1
+				  |
+Our sorted-list looks like this: 600 76 45 10 9 6 5 4 3 2
+				  |
+				  head
+
+If we create a void pointer v and set its value to SLGetItem(i1) and print out v, we can see that the iterator is indeed pointing to the head(600).
+
+To test our implementation, we have a void pointer pointing to the head and we pass it to SLRemove which will remove it from the sorted-list. Since (600) still has the iterator pointing to it after removal from the list we do not have to free any memory occupied by it. The only way to access (600) is through the iterator.
+
+Our sorted-list looks like this: 76 45 10 9 6 5 4 3 2              600
+				  |				    |
+				  head                             iter i1
+
+If we store SLNextItem into void pointer v, and print its values, we can see that its value is now 76. This is because even though 600 was removed from sorted list and no other node points to it, it still points to the next value which is 76 in this case. Now that (600)'s pointCount is 0 because the iterator moved away, we can free up any memory that it holds and our plan is still successful. We can confirm this through valgrind ./sl and we see that there are no memory leaks.
+
+				iter i1
+				  |
+Our sorted-list looks like this: 76 45 10 9 6 5 4 3 2
+				  |
+				  head
+
+The next while loop traverses the list using SLNextItem and prints out the values retreived. When it reaches the end of the list, the memory taken up by the list is freed. Once the memory is freed then we can free up any nodes that the iterator is pointing to and free the actual iterator.
+
+
+
+
